@@ -157,7 +157,7 @@
             background: #f7fafc;
             border-radius: 16px;
             padding: 32px;
-            margin-top: 40px;
+            margin-top: 10px;
         }
 
         .contact-label {
@@ -258,11 +258,65 @@
             height: 22px;
         }
 
+        /* Countdown styles */
+        .countdown-section {
+            margin: 32px 0;
+            padding: 24px;
+            background: linear-gradient(135deg, #056333 0%, #078a45 100%);
+            border-radius: 16px;
+            color: white;
+        }
+
+        .countdown-label {
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 70px;
+        }
+
+        .countdown-value {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .countdown-text {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+
+        .countdown-section.hidden {
+            display: none;
+        }
+
         /* Responsive design */
         @media (max-width: 640px) {
             .card {
                 padding: 40px 24px;
                 border-radius: 20px;
+            }
+
+            .logo img {
+                height: 32px !important;
             }
 
             .logo-text {
@@ -277,6 +331,27 @@
                 font-size: 18px;
             }
 
+            .countdown-section {
+                padding: 20px 16px;
+                margin: 24px 0;
+            }
+
+            .countdown-timer {
+                gap: 16px;
+            }
+
+            .countdown-unit {
+                min-width: 60px;
+            }
+
+            .countdown-value {
+                font-size: 32px;
+            }
+
+            .countdown-text {
+                font-size: 11px;
+            }
+
             .contact-section {
                 padding: 24px 20px;
             }
@@ -284,6 +359,16 @@
             .contact-link,
             .phone-text {
                 font-size: 16px;
+            }
+
+            .social-link {
+                width: 40px;
+                height: 40px;
+            }
+
+            .social-link svg {
+                width: 20px;
+                height: 20px;
             }
         }
 
@@ -296,6 +381,10 @@
                 padding: 32px 20px;
             }
 
+            .logo img {
+                height: 28px !important;
+            }
+
             h1 {
                 font-size: 28px;
             }
@@ -304,20 +393,72 @@
                 font-size: 16px;
                 margin-bottom: 32px;
             }
+
+            .countdown-section {
+                padding: 16px 12px;
+                margin: 20px 0;
+            }
+
+            .countdown-timer {
+                gap: 12px;
+            }
+
+            .countdown-unit {
+                min-width: 50px;
+            }
+
+            .countdown-value {
+                font-size: 28px;
+            }
+
+            .countdown-text {
+                font-size: 10px;
+            }
+
+            .divider {
+                width: 40px;
+                margin: 0 auto 32px;
+            }
+
+            .social-links {
+                gap: 12px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <main class="card">
-            <div class="logo" role="img" aria-label="BRD Online Logo">
-                <div class="logo-text">
-                    BRD Online<span class="logo-icon"></span>
-                </div>
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/brdbank/assets/main/design/logo/brd-logo.svg" 
+                     alt="BRD Bank Logo" 
+                     style="height: 40px; width: auto;">
             </div>
 
             <h1>We'll be with you soon</h1>
             <p class="subtitle">We're preparing a better digital banking experience for you.</p>
+            
+            <div id="countdown" class="countdown-section">
+                <div class="countdown-label">Launching in:</div>
+                <div class="countdown-timer">
+                    <div class="countdown-unit">
+                        <div class="countdown-value" id="days">00</div>
+                        <div class="countdown-text">Days</div>
+                    </div>
+                    <div class="countdown-unit">
+                        <div class="countdown-value" id="hours">00</div>
+                        <div class="countdown-text">Hours</div>
+                    </div>
+                    <div class="countdown-unit">
+                        <div class="countdown-value" id="minutes">00</div>
+                        <div class="countdown-text">Minutes</div>
+                    </div>
+                    <div class="countdown-unit">
+                        <div class="countdown-value" id="seconds">00</div>
+                        <div class="countdown-text">Seconds</div>
+                    </div>
+                </div>
+            </div>
             
             <div class="divider" role="presentation"></div>
 
@@ -370,5 +511,37 @@
             </section>
         </main>
     </div>
+
+    <script>
+        function updateCountdown() {
+            // Target date: January 1, 2026 at 00:00:00
+            const targetDate = new Date('2026-01-01T00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // If the countdown is over, hide the countdown section
+            if (distance < 0) {
+                document.getElementById('countdown').classList.add('hidden');
+                clearInterval(countdownInterval);
+                return;
+            }
+
+            // Calculate time units
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Update the countdown display
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Update countdown immediately and then every second
+        updateCountdown();
+        const countdownInterval = setInterval(updateCountdown, 1000);
+    </script>
 </body>
 </html>
